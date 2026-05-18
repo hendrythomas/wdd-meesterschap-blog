@@ -15,6 +15,20 @@ button, a {
 }
 
 
+a {
+  &:focus-visible {
+    outline: auto;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+}
+html:has(:focus-visible) {
+  a {
+    text-decoration: underline;
+  }
+}
+
 :root {
   --bg-1: #ffffff;
   --bg-2: #e6e6e6;
@@ -24,7 +38,7 @@ button, a {
   --icon-hover: #909090;
   --scrollbar: #00000060 transparent;
 }
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --bg-1: #262626;
     --bg-2: #404040;
@@ -34,7 +48,7 @@ button, a {
     --icon-hover: #ffffff;
     --scrollbar: #ffffff60 transparent;
   }
-} */
+}
 
 html {
   scrollbar-gutter: stable both-edges;
@@ -110,10 +124,10 @@ main {
       animation: section-in 0.3s ease;
     }
 
-    > :first-child {
+    &:first-child > :first-child {
       margin-top: 0;
     }
-    > :last-child {
+    &:last-child > :last-child {
       margin-bottom: 0;
     }
   }
@@ -121,21 +135,6 @@ main {
 html:has(:target) main {
   display: block;
   animation: main-open 1s ease;
-}
-
-
-a {
-  &:focus-visible {
-    outline: auto;
-  }
-  &:hover {
-    text-decoration: underline;
-  }
-}
-html:has(:focus-visible) {
-  a {
-    text-decoration: underline;
-  }
 }
 
 
