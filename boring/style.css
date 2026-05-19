@@ -19,7 +19,7 @@ a {
   &:focus-visible {
     outline: auto;
   }
-  &:hover {
+  &:hover:not(:active) {
     text-decoration: underline;
   }
 }
@@ -31,19 +31,21 @@ html:has(:focus-visible) {
 
 :root {
   --bg-1: #ffffff;
-  --bg-2: #e6e6e6;
-  --bg-3: #cccccc;
-  --text: #303030;
+  --bg-2: #efdfdf;
+  --bg-3: #e4bdbd;
+  --text-a: #900000;
+  --text-b: #303030;
   --icon: #505050;
   --icon-hover: #909090;
   --scrollbar: #00000060 transparent;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-1: #262626;
-    --bg-2: #404040;
-    --bg-3: #595959;
-    --text: #dcdcdc;
+    --bg-1: #101010;
+    --bg-2: #28283c;
+    --bg-3: #42426e;
+    --text-a: #c7c7ee;
+    --text-b: #dcdcdc;
     --icon: #cccccc;
     --icon-hover: #ffffff;
     --scrollbar: #ffffff60 transparent;
@@ -64,24 +66,25 @@ body {
   flex-direction: column;
   align-items:     center;
   justify-content: start;
+  padding-bottom: 1rem;
   gap: 1rem;
   background-color: var(--bg-1);
-  font-family: 'Source Sans 3', Arial, Helvetica, sans-serif;
-  color: var(--text);
+  font-family: 'Source Sans 3', 'Segoe UI', Arial, Helvetica, sans-serif;
+  color: var(--text-a);
   transition: top 0.5s ease, translate 0.5s ease;
 }
 html:has(:target) body {
   top: 0;
-  translate: 0 0;
+  translate: none;
 }
 @media only screen and (max-width: 600px) {
   body {
     top: 0;
-    translate: 0 0;
+    translate: none;
   }
 }
 
-header {
+body > header {
   width: clamp(50%, 600px, 100%);
   margin-top: 0.5rem;
   padding: 0.8rem;
@@ -89,9 +92,13 @@ header {
   > * {
     margin: 0;
   }
+
+  > h2 {
+    font-weight: normal;
+  }
 }
 
-nav {
+body > nav {
   display: flex;
   flex-wrap: wrap;
   width: clamp(50%, 600px, 100%);
@@ -107,46 +114,53 @@ nav {
 }
 
 main {
+  display: none;
   width:  clamp(50%, 600px, 100%);
   height: 100%;
   padding: 0.8rem;
   padding-top:    0.5rem;
   padding-bottom: 0.5rem;
-  background-color: var(--bg-2);
-  box-shadow: 0 0 0 1px var(--bg-3) inset;
-  display: none;
+  background-color: var(--bg-1);
+  box-shadow: 0 0 0 1px var(--bg-2) inset;
+  color: var(--text-b);
 
   > section {
     display: none;
 
-    &:target {
+    &:target,
+    &:has(:target) {
       display: block;
-      animation: section-in 0.3s ease;
+      animation: target-section 0.2s ease;
     }
 
-    &:first-child > :first-child {
+    > :first-child {
       margin-top: 0;
     }
-    &:last-child > :last-child {
+    > :last-child {
       margin-bottom: 0;
     }
   }
 }
 html:has(:target) main {
   display: block;
-  animation: main-open 1s ease;
+  animation: target-main 1s ease;
+}
+@media only screen and (max-width: 600px) {
+  html:has(:target) main {
+    animation-duration: 0.2s;
+  }
 }
 
 
 /* animations */
 
-@keyframes main-open {
+@keyframes target-main {
   0%, 50% {
     /* prevent early overflow */
     height: 0;
+    translate: 0 0.5rem;
     opacity: 0;
     overflow: hidden;
-    translate: 0 0.5rem;
   }
   75% {
     translate: none;
@@ -155,8 +169,19 @@ html:has(:target) main {
     opacity: 1;
   }
 }
+@media only screen and (max-width: 600px) {
+  @keyframes target-main {
+    0% {
+      translate: 0 0.5rem;
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
 
-@keyframes section-in {
+@keyframes target-section {
   0% {
     translate: 0.5rem 0;
     opacity: 0;
