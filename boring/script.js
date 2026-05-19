@@ -3,5 +3,9 @@ addEventListener('hashchange', (e) => {
   const targetSection = document.querySelector('main > section:target');
   if (targetSection === null) return;
 
-  window.scrollTo(0, 0);
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'instant',
+  });
 });
