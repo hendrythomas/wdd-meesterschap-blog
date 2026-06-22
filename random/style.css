@@ -9,8 +9,8 @@ html, body {
 }
 
 h1, h2, h3,
-p,
-article, section {
+p, blockquote
+nav {
   &:first-child {
     margin-top: 0;
   }
@@ -31,11 +31,35 @@ a {
   }
 }
 
-section {
+.inline-button {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: red;
+    user-select: none;
+  }
+
+  &:has(input:checked):has(.checked) .unchecked {
+    display: none;
+  }
+  &:has(input:not(:checked)) .checked {
+    display: none;
+  }
+
+  > input {
+    all: unset;
+    position: absolute;
+  }
+}
+
+nav {
   margin-top: 1rem;
 }
 
 summary {
+  width: fit-content;
   text-decoration: underline;
   cursor: pointer;
 
@@ -48,6 +72,31 @@ summary {
   }
 }
 
+blockquote {
+  margin: 0;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-left: 4px solid black;
+  background-color: #00000010;
+  backdrop-filter: saturate(2);
+}
+
+li.todo::marker {
+  content: '☐ ';
+  line-height: 0;
+}
+li.doing::marker {
+  content: '→ ☐ ';
+  line-height: 0;
+}
+li.done::marker {
+  content: '☑ ';
+  line-height: 0;
+}
+
+
+/* layout */
+
 body {
   display: grid;
   grid-template-columns: 1fr;
@@ -55,10 +104,8 @@ body {
     grid-template-rows: 1fr 1fr;
   }
   height: 100%;
-  /* font-family: Georgia, 'Times New Roman', Times, serif; */
-  /* font-family: Arial, Helvetica, sans-serif; */
     
-  @media (min-width: 800px) {
+  @media (min-width: 600px) {
     &:has(main :target) {
       grid-template-columns: 1fr 1fr;
     }
@@ -67,49 +114,87 @@ body {
     }
   }
 
-  > * {
-    flex: 1;
-  }
-
   > header {
     padding: 1rem;
     overflow: auto;
   }
+}
+html:has(#party:target) body {
+  background-color: #ff00ff20;
+  animation: rainbow 4s linear infinite;
+}
 
-  > main {
-    --bg: 255, 0, 255;
-    padding: 1rem;
-    background-color: rgba(var(--bg), 0.2);
-    overflow: auto;
-    animation: rainbow 0.01s step-end infinite;
-    animation-play-state: paused;
-    
-    @media (min-width: 800px) {
-      grid-column: 2;
-    }
+main {
+  overflow: auto;
+  position: relative;
+  
+  &:not(:has(:target)) {
+    display: none;
+  }
 
-    &:not(:has(:target)) {
+  article {
+
+    &:not(:target) {
       display: none;
     }
 
-    > article {
-      margin-top: 1rem;
+    &:nth-of-type(4n-3) {
+      --bg: magenta;
+    }
+    &:nth-of-type(4n-2) {
+      --bg: yellow;
+    }
+    &:nth-of-type(4n-1) {
+      --bg: lime;
+    }
+    &:nth-of-type(4n) {
+      --bg: blue;
+    }
 
-      &:not(:target) {
-        display: none;
+    &::before {
+      content: '';
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg);
+      opacity: 0.2;
+      z-index: -1;
+    
+      @media (min-width: 600px) {
+        top: 0;
       }
     }
   }
+
+  section {
+    padding: 1rem;
+  }
 }
 
-html:has(body > header > nav a:active) main {
-  animation-play-state: running;
-  opacity: 0;
+.actions {
+  position: sticky;
+  left: 0;
+  top: 0;
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+  background-color: white;
+  z-index: 1;
+    
+  @media (min-width: 600px) {
+    background-color: transparent;
+  }
 }
+
+html:not(:has(#party:target)) .hampster {
+  display: none;
+}
+
+
+/* animations */
 
 @keyframes rainbow {
-  0%, 100% { --bg: 255,   0, 0; }
-  25% { --bg: 255, 255, 0; }
-  50% { --bg:   0, 255, 0; }
-  75% { --bg:   0,   0, 255; }
+  100% {
+    backdrop-filter: hue-rotate(360deg);
+  }
 }
