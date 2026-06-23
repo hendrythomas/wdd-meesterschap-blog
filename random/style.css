@@ -3,14 +3,14 @@
 }
 
 html, body {
-  width:  100%;
-  height: 100%;
+  width:  100dvw;
+  height: 100dvh;
   margin: 0;
 }
 
 h1, h2, h3,
 p, blockquote
-nav {
+nav, details {
   &:first-child {
     margin-top: 0;
   }
@@ -22,23 +22,32 @@ nav {
 a {
   color: blue;
 
-  &:hover {
+  &:hover:not(:active) {
     color: red;
   }
 
   &[href^='http']::after {
-    content: ' |↗' / '';
+    content: ' |↗' / '↗';
   }
 }
 
+button {
+  all: unset;
+}
+
 .inline-button {
+  display: inline;
   color: blue;
   text-decoration: underline;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not(:active) {
     color: red;
     user-select: none;
+  }
+  &:focus-visible,
+  &:has(:focus-visible) {
+    outline: auto;
   }
 
   &:has(input:checked):has(.checked) .unchecked {
@@ -58,6 +67,9 @@ nav {
   margin-top: 1rem;
 }
 
+details {
+  margin-top: 1rem;
+}
 summary {
   width: fit-content;
   text-decoration: underline;
@@ -72,26 +84,36 @@ summary {
   }
 }
 
+figure {
+  width: fit-content;
+}
+figcaption {
+  text-align: center;
+}
+
+li.todo::marker {
+  content: '☐ ' / '';
+  line-height: 0;
+}
+li.doing::marker {
+  content: '→ ☐ ' / '→';
+  line-height: 0;
+}
+li.done::marker {
+  content: '☑ ' / '';
+  line-height: 0;
+}
+li.important::marker {
+  content: '!  ' / '❗';
+  line-height: 0;
+}
+
 blockquote {
   margin: 0;
   margin-top: 1rem;
   padding: 0.5rem;
   border-left: 4px solid black;
-  background-color: #00000010;
-  backdrop-filter: saturate(2);
-}
-
-li.todo::marker {
-  content: '☐ ';
-  line-height: 0;
-}
-li.doing::marker {
-  content: '→ ☐ ';
-  line-height: 0;
-}
-li.done::marker {
-  content: '☑ ';
-  line-height: 0;
+  backdrop-filter: brightness(0.95) saturate(2);
 }
 
 
@@ -101,11 +123,11 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   &:has(main :target) {
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 4rem 1fr;
   }
-  height: 100%;
-    
-  @media (min-width: 600px) {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
+  @media (min-width: 800px) {
     &:has(main :target) {
       grid-template-columns: 1fr 1fr;
     }
@@ -120,69 +142,63 @@ body {
   }
 }
 html:has(#party:target) body {
-  background-color: #ff00ff20;
+  background-color: #ffbfff;
   animation: rainbow 4s linear infinite;
 }
 
 main {
-  overflow: auto;
   position: relative;
-  
+  overflow: auto;
+
   &:not(:has(:target)) {
     display: none;
   }
 
+  &:has(:target:nth-of-type(4n-3)) {
+    background-color: #ffbfff;
+  }
+  &:has(:target:nth-of-type(4n-2)) {
+    background-color: #ffffbf;
+  }
+  &:has(:target:nth-of-type(4n-1)) {
+    background-color: #bfffbf;
+  }
+  &:has(:target:nth-of-type(4n)) {
+    background-color: #bfbfff;
+  }
+
   article {
+    max-width: 600px;
+    scroll-margin-top: 999px; /* always scroll to top */
 
     &:not(:target) {
       display: none;
-    }
-
-    &:nth-of-type(4n-3) {
-      --bg: magenta;
-    }
-    &:nth-of-type(4n-2) {
-      --bg: yellow;
-    }
-    &:nth-of-type(4n-1) {
-      --bg: lime;
-    }
-    &:nth-of-type(4n) {
-      --bg: blue;
-    }
-
-    &::before {
-      content: '';
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background-color: var(--bg);
-      opacity: 0.2;
-      z-index: -1;
-    
-      @media (min-width: 600px) {
-        top: 0;
-      }
     }
   }
 
   section {
     padding: 1rem;
   }
+
+  img {
+    width: 300px;
+    max-width: 100%;
+  }
 }
 
 .actions {
+  display: flex;
+  flex-wrap: wrap;
   position: sticky;
   left: 0;
-  top: 0;
-  display: flex;
+  top:  0;
   padding: 1rem;
   gap: 1rem;
-  background-color: white;
+  background-color: inherit;
   z-index: 1;
-    
-  @media (min-width: 600px) {
-    background-color: transparent;
+
+  > * {
+    flex-shrink: 0;
   }
 }
 
